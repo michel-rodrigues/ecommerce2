@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+body {
+  min-height: auto;
+}
+
+.navbar-static-top {
+  margin-bottom: 0px;
+}
+
+.navbar-default {
+    background-color: #31708f;
+    border-color: rgba(255,255,255,0.35);
+}
+
+.navbar-default 
+.navbar-brand {
+    color: #FFFFFF !important;
+}
+
+.navbar-default 
+.navbar-brand:hover {
+    color: #FFFFFF !important;
+}
+
+.navbar-default 
+.navbar-nav>li>a {
+    color: #FFFFFF;
+}
+
+.navbar-default
+.navbar-nav>li>a:hover {
+    color: rgb(136, 184, 208);
+    background-color: transparent;
+}
+
+/* Rodapé  */
+.git {
+    color: #FFFFFF !important;
+}
+
+.git:hover {
+    color: rgb(136, 184, 208) !important;
+    background-color: transparent !important;   
+    text-decoration: None !important;
+}
+
+.navbar-toggle {
+    background-color: transparent !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent !important;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.navbar-toggle:hover {
+    background-color: #205C79 !important;
+}
+
+.jumbotron {
+    background-color: #31708F;
+    color: #FFFFFF;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #31708F;
+    border-color: #2e6da4;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+a.btn.btn-lg.btn-primary {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #777;
+    box-shadow: 1px 1px 1px rgba(0,0,0,.3);
+}
+
+a.btn.btn-lg.btn-primary:hover {
+    color: #FFFFFF;
+    background-color: #337AB7;
+    border-color: rgba(0,0,0,.25);
+    -webkit-transition: all 0.25s ease-in; 
+}

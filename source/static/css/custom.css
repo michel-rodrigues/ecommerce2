@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+/* Essa classe foi usada na página inicial  */
+.text-color-0004 {
+    color: rgba(0,0,0,.4);
+}
+
+/* Altera a configuração padrão do jumbotron  */
+.element.style {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+<!-- 'load staticfiles' para carregar arquivos estáticos -->
+{% load staticfiles %}
+
+
+{% block content%}
+
+<div class="row">
+    <div class="container">
+        <div class="col-sm-9">
+            <h2>About the Django Software Foundation</h2>
+            </br>
+            <p class="text-justify">
+                Development of Django is supported by an independent 
+                foundation established as a 501(c)(3) non-profit. Like 
+                most open-source foundations, the goal of the Django 
+                Software Foundation is to promote, support, and advance 
+                its open-source project: in our case, the Django Web 
+                framework.
+            </p>
+        </div>
+        <div class="col-sm-3">
+            <img class="img-responsive" 
+                 src="{% static 'img/django-logo.png'%}" 
+                 style="margin-top: 80px"
+            />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container">
+        <div class="col-sm-12">
+            <p class="text-justify">
+                The foundation's goals are to:
+            </p>
+            <p class="text-justify">
+                Support development of Django by sponsoring sprints, 
+                meetups, gatherings and community events.
+                Promote the use of Django among the world-wide Web 
+                development community.
+                Protect the intellectual property and the framework's 
+                long-term viability.
+                Advance the state of the art in Web development.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
