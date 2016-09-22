@@ -1,3 +1,2 @@
-# Try Django 1.8
-Tutorial Try Django 1.8
-https://www.codingforentrepreneurs.com/projects/try-django-18/
+# Tutorial e-Commerce 2
+https://www.codingforentrepreneurs.com/projects/ecommerce-2
