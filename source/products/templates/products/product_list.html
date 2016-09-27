@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Também pode ser usado o objeto 'product_list' -->
+<table class="table">
+{% for obj in object_list %}
+  <tr>
+    <td>{{ obj.title }}</td>
+  </tr>
+{% endfor %}
+</table>
+
+{# {{ now }} #}
+
+<!-- Essa variável vem da configuração de Templates em 'settings' -->
+{# {{user}} #}
+
+{% endblock %}
