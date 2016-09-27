@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # Definições para email
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'your_email@gmail.com' 
+EMAIL_HOST_USER = 'your_email@gmail.com'
 EMAIL_HOST_PASSWORD = 'your_password'
 EMAIL_PORT = 587
 EMAIL_USE_TSL = True
@@ -80,7 +80,7 @@ ROOT_URLCONF = 'ecommerce2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'DIRS': [os.path.join(BASE_DIR, "templates"), ""],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
