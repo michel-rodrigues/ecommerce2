@@ -15,6 +15,12 @@ class ProductDetailView(DetailView):
 
 class ProductListView(ListView):
     model = Product
+    # Passa um filtro diferente do padrão
+    # queryset = Product.objects.filter(active=False)
+
+    # Se o método 'all' for instanciado, então é utilizado o método 
+    # padrão retornando todos os objetos do BD
+    # queryset = Product.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProductListView, self).get_context_data(*args, **kwargs)
