@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-{{ object.title }}
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"> 
+      <h3>{{ object.title }}<h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <select class="form-control">
+        {% for vari_obj in object.variation_set.all %}
+        <option value="{{ vari_obj.id }}">{{ vari_obj }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
