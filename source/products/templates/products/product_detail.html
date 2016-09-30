@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
+{% staticfiles %}
 
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-3"> 
+    <div class="col-md-8"> 
       <h3>{{ object.title }}<h3>
+      {% if object.productimage_set.count > 0 %}
+      <!-- img.image.file == caminho físico do arquivo no servidor
+           img.image.url == caminho como o arquivo está sendo servido -->
+      {% for img in object.productimage_set.all %}
+      <img class="image-responsive" src="{{ img.image.url }}"/>
+      {% endfor %}
+      {% endif %}
+      <p>{{ object.description }}</p>
     </div>
-  </div>
-  <div class="row">
     <div class="col-md-2">
+      <h3>{{ object.price }}</h3>
       {% if object.variation_set.count > 1%}
       <select class="form-control">
         {% for vari_obj in object.variation_set.all %}
@@ -16,9 +24,9 @@
         {% endfor %}
       {% endif %}
       </select>
+      <a href="#">Adicionar ao carrinho</a>
     </div>
   </div>
-  <a href="#">Adicionar ao carrinho</a>
 </div>
 
 {% endblock %}
