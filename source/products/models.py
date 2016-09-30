@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.db import models
-
+from django.db.models.signals import post_save
 
 class ProductQuerySet(models.query.QuerySet):
 
@@ -64,3 +64,27 @@ class Variation(models.Model):
     def get_absolute_url(self):
         return self.product.get_absolute_url()
 
+
+def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
+    """
+    Se o objeto MP3 Player for criado/alterado (salvo de alguma forma),
+    os argumentos enviados serão:
+    sender == <class 'products.models.Product'> # a classe
+    instance == MP3 Player # a instancia da classe
+    created == False # acho que indica se a instância acabou de ser criada
+    """
+
+    product = instance
+
+    # Reverse Relation
+    variations = product.variation_set.all() # É quase igual a instanciar
+                                             # Variation.objects.filter(product=product)
+    if variations.count() == 0:
+        new_var = Variation()
+        new_var.product = product
+        new_var.title = "Default"
+        new_var.price = product.price
+        new_var.save()
+
+
+post_save.connect(product_post_saved_receiver, sender=Product)

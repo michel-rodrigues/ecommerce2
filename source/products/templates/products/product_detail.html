@@ -9,13 +9,16 @@
   </div>
   <div class="row">
     <div class="col-md-2">
+      {% if object.variation_set.count > 1%}
       <select class="form-control">
         {% for vari_obj in object.variation_set.all %}
         <option value="{{ vari_obj.id }}">{{ vari_obj }}</option>
         {% endfor %}
+      {% endif %}
       </select>
     </div>
   </div>
+  <a href="#">Adicionar ao carrinho</a>
 </div>
 
 {% endblock %}
