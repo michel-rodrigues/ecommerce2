@@ -91,3 +91,7 @@ a.btn.btn-lg.btn-primary:hover {
     border-color: rgba(0,0,0,.25);
     -webkit-transition: all 0.25s ease-in; 
 }
+
+.navbar-form {
+  padding: 0px;
+}

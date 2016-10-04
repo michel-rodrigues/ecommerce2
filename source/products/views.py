@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render
@@ -18,13 +19,16 @@ class ProductListView(ListView):
     # Passa um filtro diferente do padrão
     # queryset = Product.objects.filter(active=False)
 
-    # Se o método 'all' for instanciado, então é utilizado o método 
+    # Se o método 'all' for instanciado aqui (ver models.py), então é utilizado o método 
     # padrão retornando todos os objetos do BD
     # queryset = Product.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProductListView, self).get_context_data(*args, **kwargs)
+        context['query'] = self.request.GET.get('q')
 
+        # Força a declaração '/?q=', se não houver levanta uma exceção
+        # context['query'] = self.request.GET['q']
         '''
         context['now'] = timezone.now()
 
@@ -38,3 +42,21 @@ class ProductListView(ListView):
         object at 0xb5b7fd6c>}
         '''
         return context
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ProductListView, self).get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            qs = self.model.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(description__icontains=query) |
+                    Q(price__icontains=query)
+                )
+            # try:
+            #     qs_price = self.models.objects.filter(
+            #             Q(price=query)
+            #         )
+            #     qs = (qs | qs_price).distinct()
+            # except:
+            #     print("DEU RUIM!!!")
+        return qs

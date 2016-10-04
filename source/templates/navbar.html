@@ -22,10 +22,25 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'newsletter:home' %}">Home</a></li>
+              <!--{# <li><a href="{% url 'newsletter:home' %}">Home</a></li>
                 <li><a href="{% url 'about' %}">About</a></li>
                 <li><a href="{% url 'newsletter:contact' %}">Contact</a></li>
-            
+               #}-->
+
+               <form class="navbar-form navbar-left search-form"
+                     method="GET"
+                     role="Search"
+                     action={% url 'products:list' %}>
+                  <div class="form-group">
+                    <input type="text" 
+                           class="form-control"
+                           placeholder="Search" 
+                           name="q"
+                    /> 
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+
                 <!-- Menu dropdown...
 
                 <li class="dropdown">
