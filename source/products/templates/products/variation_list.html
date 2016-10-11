@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Também pode ser usado o objeto 'product_list' -->
+<table class="table">
+{% for object in object_list %}
+  <tr>
+    <!--{# <td><a href="{% url 'products:detail' pk=object.pk %}">{{ object.title }}</a></td> #} -->
+    <td><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></td>
+    <td>{{ object.inventory }}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<form method="POST" action="">{% csrf_token %}
+  <!--{# {{ formset.as_p}} #} -->
+
+  {{ formset.management_form }}
+
+   {% for form in formset %}
+    {{ form.instance.product.title }}
+    {{ form.instance.title }}
+    {{ form.as_p}}
+   {% endfor %}
+
+  <input type="submit" value="Update" class="btn btn-primary">
+</form>
+
+
+{# {{ now }} #}
+
+<!-- Essa variável vem da configuração de Templates em 'settings' -->
+{# {{user}} #}
+
+{% endblock %}

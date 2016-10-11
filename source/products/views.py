@@ -1,10 +1,13 @@
+from django.contrib import messages
 from django.db.models import Q
+from django.http import Http404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 # from django.utils import timezone
 
-from .models import Product
+from .forms import VariationInventoryFormSet
+from .models import Product, Variation
 
 
 class ProductDetailView(DetailView):
@@ -21,7 +24,7 @@ class ProductListView(ListView):
 
     # Se o método 'all' for instanciado aqui (ver models.py), então é utilizado o método 
     # padrão retornando todos os objetos do BD
-    # queryset = Product.objects.all()
+    queryset = Product.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProductListView, self).get_context_data(*args, **kwargs)
@@ -60,3 +63,35 @@ class ProductListView(ListView):
             # except:
             #     print("DEU RUIM!!!")
         return qs
+
+
+class VariationListView(ListView):
+    model = Variation
+    queryset = Variation.objects.all()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(VariationListView, self).get_context_data(*args, **kwargs)
+        context['formset'] = VariationInventoryFormSet(queryset=self.get_queryset())
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        product_pk = self.kwargs.get('pk')
+        if product_pk:
+            product = get_object_or_404(Product, pk=product_pk)
+            queryset = Variation.objects.filter(product=product)
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        formset = VariationInventoryFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            formset.save(commit=False)
+            for form in formset:
+                new_item = formset.save(commit=False)
+                product_pk = self.kwargs.get['pk']
+                product = get_object_or_404(Product, pk=product_pk)
+                new_item.product = product
+                new_item.save()
+                form.save()
+            messages.success(request, 'Inventário e preços atualizados.')
+            return redirect('products:list')
+        raise Http404
