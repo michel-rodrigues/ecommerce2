@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # from django.utils import timezone
 
 from .forms import VariationInventoryFormSet
+from .mixins import LoginRequiredMixin, StaffRequiredMixin
 from .models import Product, Variation
 
 
@@ -65,7 +66,7 @@ class ProductListView(ListView):
         return qs
 
 
-class VariationListView(ListView):
+class VariationListView(StaffRequiredMixin, ListView):
     model = Variation
     queryset = Variation.objects.all()
 
@@ -82,6 +83,7 @@ class VariationListView(ListView):
         return queryset
 
     def post(self, request, *args, **kwargs):
+        # request.POST
         formset = VariationInventoryFormSet(request.POST, request.FILES)
         if formset.is_valid():
             formset.save(commit=False)
