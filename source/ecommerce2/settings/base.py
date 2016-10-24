@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # Definições para email
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'your_email@gmail.com' 
+EMAIL_HOST_USER = 'your_email@gmail.com'
 EMAIL_HOST_PASSWORD = 'your_password'
 EMAIL_PORT = 587
 EMAIL_USE_TSL = True

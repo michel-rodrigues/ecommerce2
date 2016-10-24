@@ -21,6 +21,21 @@
 
     {% include 'navbar.html' %}
 
+    {% if messages %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          <div class="alert alert-success text-center">
+              {% for message in messages %}
+              <p {% if messages.tags %} class="{{ messages.tas }}"{% endif %}>{{ message }}</p>
+              {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
     {% block jumbotron %}
 
     {% endblock %}
