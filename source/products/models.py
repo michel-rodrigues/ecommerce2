@@ -95,10 +95,9 @@ post_save.connect(product_post_saved_receiver, sender=Product)
 def image_upload_to(instance, filename):
     title = instance.product.title
     slug = slugify(title)
-    file_extension = filename(".")[1]
-    # basename, file_extension = filename(".")
-    new_filename = "%s-%s.%s" % (slug, instance.id, file_extension)
-    return "products/%s/%s" % (slug, new_filename)
+    basename, file_extension = filename.split(".")
+    new_filename = "{}-{}.{}".format(slug, instance.id, file_extension)
+    return "products/{}/{}".format(slug, new_filename)
 
 
 class ProductImage(models.Model):

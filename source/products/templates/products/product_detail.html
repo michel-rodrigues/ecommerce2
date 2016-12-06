@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+<script>
+{% block jquery %}
+  var price = $(".variation-select option:selected").attr("data-price");
+  $("#price").text(price);
+  $(".variation-select").change(function(){
+    var price = $(".variation-select option:selected").attr("data-price");
+    var sale_price = $(".variation-select option:selected").attr("data-sale-price");
+    if (sale_price != "" && sale_price != "None" && sale_price != null){
+      $("#price").html("<h3>" + sale_price + " <small style='color:red;text-decoration:line-through;'>" + " " + price + "</small></h3>");
+    }
+    else {
+      $("#price").html(price);
+    }
+
+    var img = $(".variation-select option:selected").attr("data-img");
+    $("#img").attr("src", img);
+  });
+{% endblock %}
+</script>
+
+
 {% block content %}
 <div class="container">
   <div class="row">
@@ -10,21 +31,32 @@
       <!-- img.image.file == caminho físico do arquivo no servidor
            img.image.url == caminho como o arquivo está sendo servido -->
       {% for img in object.productimage_set.all %}
-      <img class="image-responsive" src="{{ img.image.url }}"/>
+      <img id="img" class="image-responsive" src="{{ img.image.url }}"/>
       {% endfor %}
       {% endif %}
       <p>{{ object.description }}</p>
     </div>
     <div class="col-md-2">
-      <h3>{{ object.price }}</h3>
+      <h3 id="price">{{ vari_obj.price }}</h3>
       {% if object.variation_set.count > 1%}
-      <select class="form-control">
+      <select class="form-control variation-select">
         {% for vari_obj in object.variation_set.all %}
-        <option value="{{ vari_obj.id }}">{{ vari_obj }}</option>
+        <option
+          data-img="https://http2.mlstatic.com/-mp4-player-multimidia-suporta-ate-32gb-D_NQ_NP_471621-MLB20819649628_072016-O.jpg"
+          data-sale-price="{{ vari_obj.sale_price }}"
+          data-price="{{ vari_obj.price }}"
+          value="{{ vari_obj.id }}">{{ vari_obj }}
+        </option>
         {% endfor %}
       {% endif %}
       </select>
+      <hr/>
       <a href="#">Adicionar ao carrinho</a>
+      <hr/>
+      <p>Compartilhe:</p>
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+        <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
+      </a>
     </div>
   </div>
 </div>
