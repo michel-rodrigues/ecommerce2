@@ -29,6 +29,7 @@ urlpatterns = [
 
     url(r'^', include('newsletter.urls', namespace='newsletter')),
     url(r'^products/', include('products.urls', namespace='products')),
+    url(r'^categories/', include('products.urls_categories', namespace='categories')),
     url(r'^accounts/', include('registration.backends.default.urls')),
 ]
 

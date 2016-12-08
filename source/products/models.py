@@ -29,7 +29,7 @@ class Product(models.Model):
     categories = models.ManyToManyField('Category', blank=True)
     default = models.ForeignKey(
             'Category',
-            related_name='deafult_category',
+            related_name='default_category',
             null=True,
             blank=True
             )
@@ -123,3 +123,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("categories:category_detail", kwargs={'slug': self.slug })
