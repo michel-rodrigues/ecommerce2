@@ -71,19 +71,29 @@
       <hr/>
       <a href="#">Adicionar ao carrinho</a>
       <hr/>
-      <p>Produtos Relacionados</p>
-      {% for product in related %}
-        {% if product.get_image_url %}
-        <p><img id="img" class="img-responsive" src="{{ product.get_image_url }}"/></p>
-        {% else %}
-        <p><a href="{{ product.get_absolute_url }}">{{ product }}</a></p>
-        {% endif %}
-      {% endfor %}
-      <hr/>
       <p>Compartilhe:</p>
       <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
         <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
       </a>
+      <hr/>
+      <p>Produtos Relacionados</p>
+      <div class="row">
+        {% for product in related %}
+        <div class="col-md-6 col-sm-6 col-xs-6">
+          <div class="thumbnail text-center">
+            <a href="{{ product.get_absolute_url }}">
+            {% if product.get_image_url %}
+              <img id="img" class="img-responsive" src="{{ product.get_image_url }}"/>
+            {% endif %}
+            </a>
+            <div class="caption">
+              <small><a href="{{ product.get_absolute_url }}">{{ product }}</a></small>
+            </div>
+          </div>
+        </div>
+        {% cycle '' '</div><div class="row">' %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>

@@ -2,15 +2,27 @@
 
 {% block content %}
 
+<h1><a href="{% url 'products:list' %}">Produtos </a><small><a href="{% url 'categories:category_list' %}">| por categoria</a></small></h1>
+
 <!-- Também pode ser usado o objeto 'product_list' -->
-<table class="table">
-{% for object in object_list %}
-  <tr>
-    <!--{# <td><a href="{% url 'products:detail' pk=object.pk %}">{{ object.title }}</a></td> #} -->
-    <td><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></td>
-  </tr>
+<div class=row>
+{% for product in object_list %}
+  <div class="col-md-2 col-sm-2 col-xs-6">
+    <div class="thumbnail text-center">
+      <a href="{{ product.get_absolute_url }}">
+      {% if product.get_image_url %}
+        <img id="img" class="img-responsive" src="{{ product.get_image_url }}"/>
+      {% endif %}
+      </a>
+      <div class="caption">
+        <p><a href="{{ product.get_absolute_url }}">{{ product }}</a></p>
+      </div>
+    </div>
+  </div>
+<!-- 6 ciclos(cada '') e adiciona uma nova 'row'  -->
+{% cycle '' '' '' '' '' '' '</div><hr/><div class="row">' %}
 {% endfor %}
-</table>
+</div>
 
 {# {{ now }} #}
 
