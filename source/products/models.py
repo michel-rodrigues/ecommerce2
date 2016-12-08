@@ -105,5 +105,5 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product)
     image = models.ImageField(upload_to=image_upload_to)
 
-    def __str__():
+    def __str__(self):
         return self.product.title

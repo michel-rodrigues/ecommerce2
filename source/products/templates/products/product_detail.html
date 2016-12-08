@@ -31,7 +31,7 @@
       <!-- img.image.file == caminho físico do arquivo no servidor
            img.image.url == caminho como o arquivo está sendo servido -->
       {% for img in object.productimage_set.all %}
-      <img id="img" class="image-responsive" src="{{ img.image.url }}"/>
+      <img id="img" class="img-responsive" src="{{ img.image.url }}"/>
       {% endfor %}
       {% endif %}
       <p>{{ object.description }}</p>
