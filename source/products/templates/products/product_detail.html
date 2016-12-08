@@ -30,16 +30,20 @@
   <div class="row">
     <div class="col-md-8"> 
       <h3>{{ object.title }}</h3>
-      {% if object.productimage_set.count > 0 %}
       <!-- img.image.file == caminho físico do arquivo no servidor
            img.image.url == caminho como o arquivo está sendo servido -->
+      <!--{# {% if object.productimage_set.count > 0 %}
       {% for img in object.productimage_set.all %}
       <img id="img" class="img-responsive" src="{{ img.image.url }}"/>
       {% endfor %}
+      {% endif %} #}-->
+      
+      {% if object.get_image_url %}
+      <img id="img" class="img-responsive" src="{{ object.get_image_url }}"/>
       {% endif %}
       <p>{{ object.description }}</p>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
       {% if object.variation_set.count > 1 %}
       <h3 id="price">{{ object.variation_set.first.price }}</h3>
       <select class="form-control variation-select">
@@ -69,7 +73,11 @@
       <hr/>
       <p>Produtos Relacionados</p>
       {% for product in related %}
-      <p><a href="{{ product.get_absolute_url }}">{{ product }}</a></p>
+        {% if product.get_image_url %}
+        <p><img id="img" class="img-responsive" src="{{ product.get_image_url }}"/></p>
+        {% else %}
+        <p><a href="{{ product.get_absolute_url }}">{{ product }}</a></p>
+        {% endif %}
       {% endfor %}
       <hr/>
       <p>Compartilhe:</p>

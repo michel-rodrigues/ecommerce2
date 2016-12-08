@@ -27,6 +27,8 @@ class ProductManager(models.Manager):
                 default=instance.default
                 )
         # TODO: Precisa excluir os produtos que não estão ativos
+        # Retornar o 'default' no queryset faz com que produtos de categorias
+        # diferentes sejam retornados também
         q = (products_one | products_two).exclude(id=instance.id).distinct()
         return q
 
@@ -55,6 +57,12 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('products:detail', kwargs={'pk': self.pk})
+
+    def get_image_url(self):
+        img = self.productimage_set.first()
+        if img:
+            return img.image.url
+        return img # img será None
 
 
 class Variation(models.Model):

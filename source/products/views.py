@@ -5,6 +5,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.shortcuts import render, redirect, get_object_or_404
 # from django.utils import timezone
+from random import random
 
 from .forms import VariationInventoryFormSet
 from .mixins import LoginRequiredMixin, StaffRequiredMixin
@@ -41,8 +42,12 @@ class ProductDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
         instance = self.get_object() # passa o próprio objeto para armazenar na variável
-        context['related'] = Product.objects.get_related(instance)\
-                .order_by('?')[:6]
+        # context['related'] = Product.objects.get_related(instance).order_by('?')[:6]
+        context['related'] = sorted(
+                Product.objects.get_related(instance)[:6],
+                #key=lambda x: x.title
+                key=lambda x: random()
+                )
         return context
 
 
