@@ -38,6 +38,13 @@ class ProductDetailView(DetailView):
     # Definição implícita da localização do template
     # template_name = "<appname>/<modelname>_detail.html"
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
+        instance = self.get_object() # passa o próprio objeto para armazenar na variável
+        context['related'] = Product.objects.get_related(instance)\
+                .order_by('?')[:6]
+        return context
+
 
 class ProductListView(ListView):
     model = Product

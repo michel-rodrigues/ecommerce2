@@ -19,6 +19,17 @@ class ProductManager(models.Manager):
     def all(self, *args, **kwargs):
         return self.get_queryset().active()
 
+    def get_related(self, instance):
+        products_one = self.get_queryset().filter(
+                categories__in=instance.categories.all()
+                )
+        products_two = self.get_queryset().filter(
+                default=instance.default
+                )
+        # TODO: Precisa excluir os produtos que não estão ativos
+        q = (products_one | products_two).exclude(id=instance.id).distinct()
+        return q
+
 
 class Product(models.Model):
 
