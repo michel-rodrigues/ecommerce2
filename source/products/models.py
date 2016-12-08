@@ -26,8 +26,13 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=20)
     active = models.BooleanField(default=True)
-    # slug
-    # inventory
+    categories = models.ManyToManyField('Category', blank=True)
+    default = models.ForeignKey(
+            'Category',
+            related_name='deafult_category',
+            null=True,
+            blank=True
+            )
 
     # instanciando o objeto ProductManager, automaticamente a ListView só irá
     # retornar os objetos definidos no método 'all', sem precisar fazer
@@ -107,3 +112,14 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.product.title
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    def __str__(self):
+        return self.title
