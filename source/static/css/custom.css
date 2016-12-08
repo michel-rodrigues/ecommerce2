@@ -10,3 +10,8 @@
     margin-top: 20px;
     margin-bottom: 0px;
 }
+
+.orig-price {
+ color: red;
+ text-decoration: line-through;
+}

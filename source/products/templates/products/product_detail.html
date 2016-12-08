@@ -3,21 +3,24 @@
 
 <script>
 {% block jquery %}
-  var price = $(".variation-select option:selected").attr("data-price");
-  $("#price").text(price);
-  $(".variation-select").change(function(){
+  function setPrice(){ 
     var price = $(".variation-select option:selected").attr("data-price");
     var sale_price = $(".variation-select option:selected").attr("data-sale-price");
     if (sale_price != "" && sale_price != "None" && sale_price != null){
-      $("#price").html("<h3>" + sale_price + " <small style='color:red;text-decoration:line-through;'>" + " " + price + "</small></h3>");
+      $("#price").html("<h3>" + sale_price + " <small class='orig-price'>" + " " + price + "</small></h3>");
     }
     else {
       $("#price").html(price);
     }
 
-    var img = $(".variation-select option:selected").attr("data-img");
-    $("#img").attr("src", img);
+    // var img = $(".variation-select option:selected").attr("data-img");
+    // $("#img").attr("src", img);
+
+  }
+  $(".variation-select").change(function(){
+    setPrice();
   });
+  setPrice();
 {% endblock %}
 </script>
 
@@ -26,7 +29,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8"> 
-      <h3>{{ object.title }}<h3>
+      <h3>{{ object.title }}</h3>
       {% if object.productimage_set.count > 0 %}
       <!-- img.image.file == caminho físico do arquivo no servidor
            img.image.url == caminho como o arquivo está sendo servido -->
@@ -37,8 +40,8 @@
       <p>{{ object.description }}</p>
     </div>
     <div class="col-md-2">
-      <h3 id="price">{{ vari_obj.price }}</h3>
-      {% if object.variation_set.count > 1%}
+      {% if object.variation_set.count > 1 %}
+      <h3 id="price">{{ object.variation_set.first.price }}</h3>
       <select class="form-control variation-select">
         {% for vari_obj in object.variation_set.all %}
         <option
@@ -48,8 +51,19 @@
           value="{{ vari_obj.id }}">{{ vari_obj }}
         </option>
         {% endfor %}
-      {% endif %}
       </select>
+      {% else%}
+      <h3 id="price">
+        {%if object.variation_set.first.sale_price %}
+          {{ object.variation_set.first.sale_price }}
+          <small class="orig-price">
+            {{ object.variation_set.first.price }}
+          </small>
+        {% else %}
+          {{ object.variation_set.first.price }}
+        {% endif %}
+      </h3>
+      {% endif %}
       <hr/>
       <a href="#">Adicionar ao carrinho</a>
       <hr/>
