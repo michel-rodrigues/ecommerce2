@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
 
@@ -86,6 +87,18 @@ class Variation(models.Model):
             return self.sale_price
         else:
             return self.price
+
+    def get_html_price(self):
+        if self.sale_price is not None:
+            html_price = "{} </small><small class=\
+                    'orig-price'>{}</small>".format(self.sale_price, self.price)
+            price = mark_safe(html_price)
+
+        else:
+            price = self.price
+
+        return price or None
+
 
     def get_absolute_url(self):
         return self.product.get_absolute_url()
