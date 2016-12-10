@@ -5,137 +5,123 @@
 {%block head_title %}Bem vindo | {{ block.super }}{% endblock %}
 
 {% block jumbotron %}
-
 {% if request.user.is_authenticated  %}
-
 <div class=row>
     <div class="container">
         <h1>You are logged in! </h1>
     </div>
 </div>
 {% else %}
-
-<div class="jumbotron">
+  {% if featured_image %}
+    {% if featured_image.make_image_background %}
+    <style>
+      .jumbotron {
+        background-image: url('{{ featured_image.image.url }}');
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+    </style>
+    {% endif %}
+  <div class="jumbotron">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-5">
-                <h1>Projeto S.A.</h1>
-                <p class="lead text-justify">
-                    Esse é um exemplo de uma página inicial para o 
-                    Projeto S.A. Essa página é responsiva, ou seja, 
-                    ela se adapta ao dispositivo em que está sendo exibida.
-                </p>
-                <i class="fa fa-television fa-4x" style="margin-right: 5px;"></i>
-                <i class="fa fa-tablet fa-3x" style="margin-right: 7px;"></i>
-                <i class="fa fa-mobile fa-2x"></i>
-                <p>
-                    <a class="btn btn-lg btn-primary"
-                       style="margin-top: 23px;"
-                       href="" role="button">Junte-se a nós &raquo;
-                    </a>
-                </p>
-            </div>
-            <div class="col-sm-7">
-            <div class="embed-responsive embed-responsive-16by9">
-                <iframe width="535"
-                        height="300" 
-                        src="https://www.youtube.com/embed/KsLHt3D_jsE?list=PLEsfXFp6DpzRcd-q4vR5qAgOZUuz8041S" 
-                        frameborder="0"
-                        style="margin-top: 23px;"
-                        allowfullscreen
-                >
-                </iframe>
-            </div>
-            </div>
-<!--
-            <div class='col-sm-6'>
-                <iframe width="535"
-                        height="300" 
-                        src="https://www.youtube.com/embed/KsLHt3D_jsE?list=PLEsfXFp6DpzRcd-q4vR5qAgOZUuz8041S" 
-                        frameborder="0"
-                        style="margin-top: 23px;"
-                        allowfullscreen
-                >
-                </iframe>
-            </div>
--->
+      <div class="row">
+        <div class="col-sm-5">
+          <h1>{{ featured_image.product.title }}</h1>
+          <p class="lead text-justify">{{ featured_image.product.description }}</p>
+          <p>
+            <a class="btn btn-lg btn-primary"
+               style="margin-top: 23px;"
+               href="{{ featured_image.products.get_absolute_url }}"
+               role="button">Detalhes &raquo;
+            </a>
+          </p>
         </div>
+        <div class="col-sm-7">
+          <img class="img-responsive" src="{{ featured_image.image.url }}"/>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+
+  {% else %}
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5">
+          <h1>Projeto S.A.</h1>
+          <p class="lead text-justify">
+            Esse é um exemplo de uma página inicial para o 
+            Projeto S.A. Essa página é responsiva, ou seja, 
+            ela se adapta ao dispositivo em que está sendo exibida.
+          </p>
+          <i class="fa fa-television fa-4x" style="margin-right: 5px;"></i>
+          <i class="fa fa-tablet fa-3x" style="margin-right: 7px;"></i>
+          <i class="fa fa-mobile fa-2x"></i>
+          <p>
+            <a class="btn btn-lg btn-primary"
+               style="margin-top: 23px;"
+               href="" role="button">Junte-se a nós &raquo;
+            </a>
+          </p>
+        </div>
+        <div class="col-sm-7">
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe width="535"
+                    height="300" 
+                    src="https://www.youtube.com/embed/KsLHt3D_jsE?list=PLEsfXFp6DpzRcd-q4vR5qAgOZUuz8041S" 
+                    frameborder="0"
+                    style="margin-top: 23px;"
+                    allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 {% endif %}
 {% endblock %}
 
 {% block content %}
-
-<!-- 
-    Exibe um contexto diferente para usuário logado. Essa informação
-    vem do arquivo 'views.py'
-
-  -->
 {% if request.user.is_authenticated  %}
-
 <h3>This is your context content</h3>
-
-    <!-- 
-        Exibe uma tabela com os usuários cadastrados no banco de dados
-        somente para administradores logados e que fazem parte da equipe.
-        
-        'forloop.counter' para enumerar e os outros são atributos de cada
-        instância no banco de dados, ou seja, os dados fornecidos de cada
-        usuário cadastrado no banco de dados
-    -->
-
-    {% if queryset %}
-        <h4>Olá {{request.user }}</h4>
-        <table class="table">
-        {% for instance in queryset%}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ instance.full_name }}</td>
-                <td>{{ instance.email }}</td>
-                <td> {{ instance.timestamp|timesince }}</td>
-            </tr>
-        {% endfor%}
-        </table>
+{% if queryset %}
+  <h4>Olá {{request.user }}</h4>
+    <table class="table">
+    {% for instance in queryset%}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ instance.full_name }}</td>
+        <td>{{ instance.email }}</td>
+        <td> {{ instance.timestamp|timesince }}</td>
+      </tr>
+      {% endfor%}
+    </table>
    {%endif%}
-
 {% else %}
-
-
-
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-3 pull-right">
-        <p class="lead">{{ title  }}</p>
-        <!-- {#
-        Exibem o usuário logado ou AnonymousUser para um usuário visitante
-        <p>{{ user  }}</p>
-        <p>{{ request.user }}</p>
-        <h3> ¯\_(ツ)_/¯</h3>
-         #} -->
-
-        <!-- 
-            'csrf_token' é uma segurança do Django contra um tipo de
-            através de formulários. É obrigatório ser declarado.
-        -->
-        <form method='POST' action='.'>
-            {% csrf_token %}
-            {{ form|crispy }}
-            <input class="btn btn-primary" type="submit" value="Sign Up" />
-        </form>
+  <div class="col-xs-12 col-sm-6 col-md-3 pull-right">
+    <p class="lead">{{ title  }}</p>
+      <form method='POST' action='.'>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input class="btn btn-primary" type="submit" value="Sign Up" />
+      </form>
     </div>
     <div class="col-sm-3 col-xs-12">
-        <p class="lead text-center text-color-0004">Home Office</p>
-        <img class="img-responsive" src="{% static 'img/home-office.jpg' %}"/>
+      <p class="lead text-center text-color-0004">Home Office</p>
+      <img class="img-responsive" src="{% static 'img/home-office.jpg' %}"/>
     </div>
     <div class="col-sm-3 col-xs-12">
-        <p class="lead text-center text-color-0004">Projetos Paralelos</p>
-        <img class="img-responsive" src="{% static 'img/cerveja-artesanal.jpg' %}"/>
+      <p class="lead text-center text-color-0004">Projetos Paralelos</p>
+      <img class="img-responsive" src="{% static 'img/cerveja-artesanal.jpg' %}"/>
     </div>
     <div class="col-sm-3 col-xs-12">
-        <p class="lead text-center text-color-0004">Discussão de novas ideias</p>
-        <img class="img-responsive" style="margin-bottom: 10px;" src="{% static 'img/churrasco.jpg' %}"/>
+      <p class="lead text-center text-color-0004">Discussão de novas ideias</p>
+      <img class="img-responsive" style="margin-bottom: 10px;" src="{% static 'img/churrasco.jpg' %}"/>
     </div>
 </div>
-
 {% endif %}
 {% endblock %}

@@ -132,8 +132,12 @@ post_save.connect(product_post_saved_receiver, sender=Product)
 def image_upload_to(instance, filename):
     title = instance.product.title
     slug = slugify(title)
-    basename, file_extension = filename.split(".")
+    *filename_garbage, file_extension = filename.split(".")
     new_filename = "{}-{}.{}".format(slug, instance.id, file_extension)
+
+    if 'ProductFeatured' in repr(instance):
+        return "products/{}/featured/{}".format(slug, new_filename)
+
     return "products/{}/{}".format(slug, new_filename)
 
 
@@ -158,3 +162,17 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("categories:category_detail", kwargs={'slug': self.slug })
+
+
+class ProductFeatured(models.Model):
+    product = models.ForeignKey(Product)
+    image = models.ImageField(upload_to=image_upload_to)
+    title = models.CharField(max_length=120, blank=True)
+    text = models.CharField(max_length=220, blank=True)
+    text_right = models.BooleanField(default=False)
+    show_price = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    make_image_background = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.product.title
