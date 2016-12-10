@@ -25,7 +25,7 @@ urlpatterns = [
     # Procura exatamente a palvara 'about', nessa sequência de letras
     url(r'^\babout\b', about, name='about'),
     url(r'^admin/', admin.site.urls),
-    # url(r'^login/', login_view, name='login'),
+    #url(r'^login/', login_view, name='login'),
 
     url(r'^', include('newsletter.urls', namespace='newsletter')),
     url(r'^products/', include('products.urls', namespace='products')),

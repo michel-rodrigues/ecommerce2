@@ -34,17 +34,6 @@ body {
     background-color: transparent;
 }
 
-/* Rodapé  */
-.git {
-    color: #FFFFFF !important;
-}
-
-.git:hover {
-    color: rgb(136, 184, 208) !important;
-    background-color: transparent !important;   
-    text-decoration: None !important;
-}
-
 .navbar-toggle {
     background-color: transparent !important;
 }
@@ -59,6 +48,10 @@ body {
 
 .navbar-toggle:hover {
     background-color: #205C79 !important;
+}
+
+.dropdown-menu {
+  padding: 10px 10px 0px 10px;
 }
 
 .jumbotron {
@@ -94,4 +87,15 @@ a.btn.btn-lg.btn-primary:hover {
 
 .navbar-form {
   padding: 0px;
+}
+
+/* Rodapé  */
+.git {
+    color: #FFFFFF !important;
+}
+
+.git:hover {
+    color: rgb(136, 184, 208) !important;
+    background-color: transparent !important;   
+    text-decoration: None !important;
 }
