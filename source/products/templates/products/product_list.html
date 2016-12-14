@@ -4,23 +4,6 @@
 
 <h1><a href="{% url 'products:list' %}">Produtos </a><small><a href="{% url 'categories:category_list' %}">| por categoria</a></small></h1>
 
-<!-- Também pode ser usado o objeto 'product_list' -->
-<div class=row>
-{% for product in object_list %}
-  <div class="col-md-2 col-sm-2 col-xs-6">
-  {% include 'products/product_thumbnail.html' with product=product price='True'%}
-  </div>
-<!-- a cada 5 iterações adiciona uma nova 'row' 
-     o primeiro '' representa duas iterações, a partir daí
-     cada '' representa uma iteração a mais 
--->
-{% cycle '' '' '' '' '' '</div><hr/><div class="row">' %}
-{% endfor %}
-</div>
-
-{# {{ now }} #}
-
-<!-- Essa variável vem da configuração de Templates em 'settings' -->
-{# {{user}} #}
+{% include 'products/products.html' with object_lits=object_list %}
 
 {% endblock %}

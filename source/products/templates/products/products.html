@@ -1,0 +1,24 @@
+{% block content %}
+
+<!-- Também pode ser usado o objeto 'product_list' -->
+<div class=row>
+{% for product in object_list %}
+  <div class="col-md-2 col-sm-2 col-xs-6">
+  {% include 'products/product_thumbnail.html' with product=product price='True'%}
+  </div>
+  {% if not col_class_set %}
+    <!-- a cada 5 iterações adiciona uma nova 'row' 
+         o primeiro '' representa duas iterações, a partir daí
+         cada '' representa uma iteração a mais 
+    -->
+    {% cycle '' '' '' '' '' '</div><hr/><div class="row">' %}
+  {% endif %}
+{% endfor %}
+</div>
+
+{# {{ now }} #}
+
+<!-- Essa variável vem da configuração de Templates em 'settings' -->
+{# {{user}} #}
+
+{% endblock %}

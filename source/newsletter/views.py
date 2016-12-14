@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.core.mail import send_mail
 
-from products.models import ProductFeatured
+from products.models import ProductFeatured, Product
 from .forms import ContactForm, SignUpForm
 from .models import SignUp
 
@@ -14,12 +14,14 @@ def home(request):
     # seriam exibidas antes de qualquer ação do usuário
     form = SignUpForm(request.POST or None)
 
+    products = Product.objects.all().order_by('?')[:6]
     featured_image = ProductFeatured.objects.first()
 
     context = {
         'title': "Sign Up Now",
         'form': form,
         'featured_image': featured_image,
+        'products': products,
         }
 
     if form.is_valid():
@@ -30,14 +32,6 @@ def home(request):
         instance.full_name = full_name
         instance.save()
         context['title'] = 'Thank You'
-
-    if request.user.is_authenticated() and request.user.is_staff:
-        queryset = SignUp.objects.all().order_by('full_name')
-        context['queryset'] = queryset
-
-    elif request.user.is_authenticated():
-        queryset = SignUp.objects.all().order_by('full_name')
-        context['queryset'] = queryset
 
     return render(request, "home.html", context)
 
