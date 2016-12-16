@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'registration',
     #my apps
+    'carts',
     'newsletter',
     'products',
 ]
@@ -172,7 +173,7 @@ REGISTRATION_AUTO_LOGIN = True
 #REGISTRATION_EMAIL_HTML
 """Optional. If this is False, registration emails will be send in plain text. If this is True, emails will be sent as HTML. Defaults to True."""
 
-#NÃO ENTENDI, MAS FEZ FUNCIONA A TELA DE LOGIN 
+#NÃO ENTENDI, MAS FEZ FUNCIONAR A TELA DE LOGIN 
 SITE_ID = 1
 
 #Redireciona após o login
