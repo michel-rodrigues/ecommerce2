@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from .views import about
+from carts.views import CartView
 
 urlpatterns = [
     # Procura exatamente a palvara 'about', nessa sequência de letras
@@ -31,6 +32,7 @@ urlpatterns = [
     url(r'^products/', include('products.urls', namespace='products')),
     url(r'^categories/', include('products.urls_categories', namespace='categories')),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^cart/$', CartView.as_view(), name='cart'),
 ]
 
 if settings.DEBUG:

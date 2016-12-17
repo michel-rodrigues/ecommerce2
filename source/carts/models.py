@@ -10,7 +10,7 @@ class  CartItem(models.Model):
     item = models.ForeignKey(Variation)
     quantity = models.PositiveIntegerField(default=1)
 
-    def __str__():
+    def __str__(self):
         return self.item.title
 
 
