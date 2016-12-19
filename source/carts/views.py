@@ -13,7 +13,7 @@ class CartView(SingleObjectMixin, View):
     template_name = 'carts/view.html'
 
     def get_object(self, *args, **kwargs):
-        self.request.session.set_expiry(300) # 5 minutos
+        self.request.session.set_expiry(3000)
         cart_id = self.request.session.get('cart_id')
         if cart_id == None:
             cart = Cart()

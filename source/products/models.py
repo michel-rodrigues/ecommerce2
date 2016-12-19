@@ -99,9 +99,18 @@ class Variation(models.Model):
 
         return price or None
 
-
     def get_absolute_url(self):
         return self.product.get_absolute_url()
+
+    def get_title(self):
+        return "{} - {}".format(self.product.title, self.title)
+
+
+    def add_to_cart(self):
+        return "{}?item={}&qty=1".format(reverse('cart'), self.id)
+
+    def delete_from_cart(self):
+        return "{}?item={}&qty=1&delete=True".format(reverse('cart'), self.id)
 
 
 def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
