@@ -35,8 +35,7 @@
         // String com múltiplas linhas
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
         // {# var template = `{% include 'alert.html' with message='` + message + `'%}`; #}
-        var message = "Produto adicionado ao carrinho de compras"
-        showFlashMessage(message);
+        showFlashMessage(data.flash_message);
       },
       error: function(response, error){
         console.log(response);

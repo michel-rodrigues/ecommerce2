@@ -19,17 +19,17 @@
       success: function(data){
         if (data.deleted){
           $("#item"+item).fadeOut();
-
         } 
         else {
           $("#item-line-total-"+item).text(data.line_total);
           $("#subtotal").text(data.subtotal);
         }
-        showFlashMessage("Carrinho atualizado");
+        showFlashMessage(data.flash_message);
       },
       error: function(response, error){
         console.log(response);
         console.log(error);
+        $("#add-form").submit();
       }
     });
   });

@@ -32,6 +32,7 @@ class CartView(SingleObjectMixin, View):
         item_id = request.GET.get('item')
         delete_item = request.GET.get('delete', False)
         item_added = False
+        flash_message = ''
 
         if item_id:
             item_instance = get_object_or_404(Variation, id=item_id)
@@ -47,11 +48,14 @@ class CartView(SingleObjectMixin, View):
                     )
             if created:
                 item_added = True
+                flash_message = "Produto adicionado ao carrinho de compras"
             if delete_item:
                 cart_item.delete()
+                flash_message = "Produto removido do carrinho de compras"
             else:
                 cart_item.quantity = qty
                 cart_item.save()
+                flash_message = "Quantidade do produto atualizada"
             if not request.is_ajax():
                 return HttpResponseRedirect(reverse('cart'))
 
@@ -70,7 +74,8 @@ class CartView(SingleObjectMixin, View):
                 "deleted": delete_item,
                 "item_added": item_added,
                 "line_total": total,
-                "subtotal": subtotal
+                "subtotal": subtotal,
+                "flash_message": flash_message
                 }
             return JsonResponse(data)
 
