@@ -70,11 +70,17 @@ class CartView(SingleObjectMixin, View):
             except:
                 subtotal = None
 
+            try:
+                total_items = cart_item.cart.items.count()
+            except:
+                total_items = 0
+
             data = {
                 "deleted": delete_item,
                 "item_added": item_added,
                 "line_total": total,
                 "subtotal": subtotal,
+                "total_items": total_items,
                 "flash_message": flash_message
                 }
             return JsonResponse(data)

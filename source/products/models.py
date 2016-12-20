@@ -105,7 +105,6 @@ class Variation(models.Model):
     def get_title(self):
         return "{} - {}".format(self.product.title, self.title)
 
-
     def add_to_cart(self):
         return "{}?item={}&qty=1".format(reverse('cart'), self.id)
 
