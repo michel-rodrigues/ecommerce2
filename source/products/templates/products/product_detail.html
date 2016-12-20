@@ -21,6 +21,25 @@
     setPrice();
   });
   setPrice();
+
+  $("#submit-btn").click(function(event){
+    event.preventDefault();
+    var formData = $("#add-form").serialize();
+    console.log(formData);
+    $.ajax({
+      type: "GET",
+      url: "{% url 'cart' %}",
+      data: formData,
+      success: function(data){
+        console.log(data);
+      },
+      error: function(response, error){
+        console.log(response);
+        console.log(error);
+      }
+    });
+  });
+
 {% endblock %}
 </script>
 
@@ -43,10 +62,12 @@
       {% endif %}
       <p>{{ object.description }}</p>
     </div>
+
+    <!-- #### SIDEBAR ##### -->
     <div class="col-md-3">
       {% if object.variation_set.count > 1 %}
       <h3 id="price">{{ object.variation_set.first.price }}</h3>
-      <form method="GET" action="{% url 'cart' %}">
+      <form id="add-form" method="GET" action="{% url 'cart' %}">
         <select name='item' class="form-control variation-select">
           {% for vari_obj in object.variation_set.all %}
           <!--{# <option
@@ -60,7 +81,6 @@
             data-price="{{ vari_obj.price }}"
             value="{{ vari_obj.id }}">{{ vari_obj }}
           </option>
-
           {% endfor %}
         </select>
         {% else%}
@@ -79,13 +99,16 @@
         <br/>
         <input type='number' value="1" name="qty" class='form-control'/>
         <br/>
-        <input type='submit' value="Adicionar ao carrinho" class='btn btn-primary'/>
+        <input id="submit-btn" type='submit' value="Adicionar ao carrinho" class='btn btn-primary'/>
       </form>
       <hr/>
       <p>Compartilhe:</p>
       <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
         <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
       </a>
+      <a href="#"><i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+      <a href="#"><i class="fa fa-google-plus-square fa-2x" aria-hidden="true"></i></a>
+      <a href="#"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i></a>
       <hr/>
       <p>Produtos Relacionados</p>
       <div class="row">
@@ -99,5 +122,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
