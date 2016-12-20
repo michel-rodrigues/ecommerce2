@@ -19,3 +19,10 @@
 .btn-update {
   display: none;
 }
+
+.container-alert-flash {
+  position: absolute;
+  top: 10px;
+  z-index: 1000;
+  display: none;
+}
