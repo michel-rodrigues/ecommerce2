@@ -31,6 +31,7 @@
           var template = `{% include 'carts/empty_cart.html' %}`;
           $(".main-content").html(template);
         }
+        updateItemCartCount();
       },
       error: function(response, error){
         console.log(response);
