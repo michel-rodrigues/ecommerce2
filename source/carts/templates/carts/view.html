@@ -20,10 +20,13 @@
       success: function(data){
         if (data.deleted){
           $("#item-"+item).fadeOut();
+
         } 
         else {
           $("#item-line-total-"+item).text(data.line_total);
           $("#subtotal").text(data.subtotal);
+          $("#taxtotal").text(data.tax_total);
+          $("#carttotal").text(data.cart_total);
         }
         showFlashMessage(data.flash_message);
         if (data.total_items == 0){
@@ -51,22 +54,28 @@
   <table class="table">
   {% for item in object.cartitem_set.all %}
   <tr id="item-{{ item.item.id }}">
-      <td>{{ item.item.get_title }}</td>
-      <td>
-        <form action="." method="GET">
-          <input type='hidden' name='item' value="{{ item.item.id }}"/>
-          <input type='number' class="item-qty" name='qty' value="{{ item.quantity }}"/>
-          <input type='submit' class="btn btn-link btn-update" value="Atualizar"/>
-        </form>
-      </td>
-      <td id="item-line-total-{{ item.item.id }}">{{ item.line_item_total }}</td>
-      <td><a class="text-right" href="{{ item.remove }}">Remover</a></td>
+    <td>{{ item.item.get_title }}</td>
+    <td>
+      <form action="." method="GET">
+        <input type='hidden' name='item' value="{{ item.item.id }}"/>
+        <input type='number' class="item-qty" name='qty' value="{{ item.quantity }}"/>
+        <input type='submit' class="btn btn-link btn-update" value="Atualizar"/>
+      </form>
+    </td>
+    <td id="item-line-total-{{ item.item.id }}">{{ item.line_item_total }}</td>
+    <td><a class="text-right" href="{{ item.remove }}">Remover</a></td>
   </tr>
   {% endfor %}
-  
-  <tr><td id="subtotal" colspan="5" class='text-right'>Subtotal: {{ object.subtotal }}</td></tr>
-  
-  </table>
+  <tr>
+    <td colspan='4' class='text-right'>Subtotal: <span id='subtotal'>{{ object.subtotal }}</span></td>
+  </tr>
+  <tr>
+    <td colspan='4' class='text-right'>Tax (Estimated): <span id='taxtotal'>{{ object.tax_total }}</span></td>
+  </tr>
+  <tr>
+    <td colspan='4' class='text-right'>Total: <span id='carttotal'>{{ object.total }}</span></td>
+  </tr>
+</table>
 {% endif %}
 </div>
 {% endblock content %}

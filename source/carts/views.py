@@ -81,6 +81,16 @@ class CartView(SingleObjectMixin, View):
                 total = None
 
             try:
+                cart_total = cart_item.cart.total
+            except:
+                cart_total = None
+
+            try:
+                tax_total = cart_item.cart.tax_total
+            except:
+                tax_total = None
+
+            try:
                 subtotal = cart_item.cart.subtotal
             except:
                 subtotal = None
@@ -95,6 +105,8 @@ class CartView(SingleObjectMixin, View):
                 "item_added": item_added,
                 "line_total": total,
                 "subtotal": subtotal,
+                "cart_total": cart_total,
+                "tax_total": tax_total,
                 "total_items": total_items,
                 "flash_message": flash_message
                 }
