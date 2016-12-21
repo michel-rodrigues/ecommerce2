@@ -1,11 +1,9 @@
 ## python files to ignore
 *.pyc
 **/__pycache__/*
-**/migrations/*  
 
 ## 
 *.src
-*.sqlite3
 public/
 design/
 
