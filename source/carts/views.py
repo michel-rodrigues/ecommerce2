@@ -1,18 +1,18 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.base import View
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.detail import SingleObjectMixin, DetailView
 
-from carts.models import Cart, CartItem
-from products.models import Variation
+from .models import Cart, CartItem
 
 
 class ItemCountView(View):
 
     def get(self, request, *args, **kwargs):
         if request.is_ajax():
-            cart_id = self.request.session.get('cart_id')
+            cart_id = self.request.session.get("cart_id")
             count = 0
             if cart_id:
                 cart = Cart.objects.get(id=cart_id)
@@ -20,7 +20,7 @@ class ItemCountView(View):
             request.session["cart_item_count"] = count
             return JsonResponse({"count": count})
         else:
-            Http404
+            raise Http404
 
 
 class CartView(SingleObjectMixin, View):
@@ -118,3 +118,25 @@ class CartView(SingleObjectMixin, View):
         template = self.template_name
         return render(request, template, context)
 
+class CheckoutView(DetailView):
+    model = Cart
+    template_name = 'carts/checkout_view.html'
+
+    def get_object(self, *args, **kwargs):
+        cart_id = self.request.session.get('cart_id')
+        if cart_id == None:
+            return redirect('cart')
+        cart = Cart.objects.get(id=cart_id)
+        return cart
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CheckoutView, self).get_context_data(*args, **kwargs)
+        user_can_continue = False
+        if not self.request.user.is_authenticated():
+            context['login_form'] = AuthenticationForm()
+            # .../ref/request-response/#django.http.HttpRequest.build_absolute_uri
+            context['next_url'] = self.request.build_absolute_uri()
+        if self.request.user.is_authenticated():
+            user_can_continue = True
+        context['user_can_continue'] = user_can_continue
+        return context

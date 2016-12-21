@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% if not user_can_continue %}
+<div class="col-sm-6">
+  <h2>Continue como convidado</h2>
+</div>
+<div class="col-sm-6">
+  <h2 style="padding-bottom: 20px;">Acesse sua conta</h2>
+  <form method='POST' action="{% url 'auth_login' %}">
+    {% csrf_token %}
+    {{ login_form|crispy }}
+    <input type="hidden" name="next" value="{{ next_url }}"/>
+    <input type="submit" class="btn btn-primary" value="Login"/>
+  </form>
+  <h4>{% trans "Esqueceu sua senha?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</h4>
+  <h4>{% trans "Não tem uma conta?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</h4>
+</div>
+{% endif %}
+{% endblock content %}
