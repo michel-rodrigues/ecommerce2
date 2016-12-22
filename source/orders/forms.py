@@ -21,3 +21,8 @@ class GuestCheckoutForm(forms.Form):
             return email2
         else:
             raise forms.ValidationError("Endereço de email diferentes.")
+
+
+class AddressForm(forms.Form):
+    billing_address = forms.CharField()
+    shipping_address = forms.CharField()
