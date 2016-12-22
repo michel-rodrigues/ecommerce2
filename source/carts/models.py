@@ -58,8 +58,9 @@ def cart_item_post_save_receiver(sender, instance, *args, **kwargs):
 def do_tax_and_total_receiver(sender, instance, *args, **kwargs):
 
     subtotal = Decimal(instance.subtotal)
+    tax_percentage = Decimal(instance.tax_percentage)
 
-    tax_total = subtotal * instance.tax_percentage
+    tax_total = subtotal * tax_percentage
     total = subtotal + tax_total
 
     tax_total = tax_total.quantize(Decimal('.01'), rounding=ROUND_DOWN)

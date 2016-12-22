@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
+from .models import UserAddress
+
 
 User = get_user_model()
 
@@ -24,5 +26,15 @@ class GuestCheckoutForm(forms.Form):
 
 
 class AddressForm(forms.Form):
-    billing_address = forms.CharField()
-    shipping_address = forms.CharField()
+    billing_address = forms.ModelChoiceField(
+            queryset=UserAddress.objects.filter(address_type='billing'),
+            empty_label=None,  # pode ser uma string também
+            widget=forms.RadioSelect
+            )
+    shipping_address = forms.ModelChoiceField(
+            queryset=UserAddress.objects.filter(address_type='shipping'),
+            empty_label=None,
+            # sem passar um widget é renderizado uma caixa de seleção com
+            # dropdown
+            widget=forms.RadioSelect
+            )
