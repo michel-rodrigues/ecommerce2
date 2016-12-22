@@ -151,6 +151,13 @@ class CheckoutView(FormMixin, DetailView):
             user_can_continue = True
         else:
             pass
+        if self.request.user.is_authenticated():
+            user_checkout, _ = UserCheckout.objects.get_or_create(
+                    email=self.request.user.email
+                    )
+            user_checkout.user = self.request.user
+            user_checkout.save()
+            self.request.session['user_checkout_id'] = user_checkout.id
         context['user_can_continue'] = user_can_continue
         context['form'] = self.get_form()  # Herdado de FormMixin
         return context
@@ -160,8 +167,8 @@ class CheckoutView(FormMixin, DetailView):
         form = self.get_form()
         if form.is_valid():
             email = form.cleaned_data.get('email')
-            user_checkout = UserCheckout.objects.get_or_create(email=email)
-            request.session['user_checkout_id'] = user_checkout[0].id
+            user_checkout, _ = UserCheckout.objects.get_or_create(email=email)
+            request.session['user_checkout_id'] = user_checkout.id
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
