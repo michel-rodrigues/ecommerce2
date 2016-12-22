@@ -161,7 +161,7 @@ class CheckoutView(FormMixin, DetailView):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             user_checkout = UserCheckout.objects.get_or_create(email=email)
-            request.session['user_checkout_id'] = user_checkout.id
+            request.session['user_checkout_id'] = user_checkout[0].id
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
