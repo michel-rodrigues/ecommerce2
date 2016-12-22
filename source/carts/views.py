@@ -7,7 +7,10 @@ from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.views.generic.edit import FormMixin
 
 from .models import Cart, CartItem
+from orders.models import UserCheckout
 from orders.forms import GuestCheckoutForm
+from products.models import Variation
+
 
 class ItemCountView(View):
 
@@ -32,7 +35,7 @@ class CartView(SingleObjectMixin, View):
     def get_object(self, *args, **kwargs):
         self.request.session.set_expiry(3000)
         cart_id = self.request.session.get('cart_id')
-        if cart_id == None:
+        if cart_id is None:
             cart = Cart()
             cart.save()
             cart_id = cart.id
@@ -119,6 +122,7 @@ class CartView(SingleObjectMixin, View):
         template = self.template_name
         return render(request, template, context)
 
+
 class CheckoutView(FormMixin, DetailView):
 
     # https://docs.djangoproject.com/en/1.10/ref/class-based-views/mixins-editing/#formmixin
@@ -126,11 +130,11 @@ class CheckoutView(FormMixin, DetailView):
 
     model = Cart
     template_name = 'carts/checkout_view.html'
-    form_class = GuestCheckoutForm # herdado de FormMixin
+    form_class = GuestCheckoutForm  # herdado de FormMixin
 
     def get_object(self, *args, **kwargs):
         cart_id = self.request.session.get('cart_id')
-        if cart_id == None:
+        if cart_id is None:
             return redirect('cart')
         cart = Cart.objects.get(id=cart_id)
         return cart
@@ -138,23 +142,30 @@ class CheckoutView(FormMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(CheckoutView, self).get_context_data(*args, **kwargs)
         user_can_continue = False
-        if not self.request.user.is_authenticated():
+        user_check_id = self.request.session.get("user_checkout_id")
+        if not self.request.user.is_authenticated() or user_check_id is None:
             context['login_form'] = AuthenticationForm()
             # https://docs.djangoproject.com/en/1.10/ref/request-response/#django.http.HttpRequest.build_absolute_uri
             context['next_url'] = self.request.build_absolute_uri()
-        if self.request.user.is_authenticated():
+        elif self.request.user.is_authenticated() or user_check_id is not None:
             user_can_continue = True
+        else:
+            pass
         context['user_can_continue'] = user_can_continue
-        context['form'] = self.get_form() # Herdado de FormMixin
+        context['form'] = self.get_form()  # Herdado de FormMixin
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
+            email = form.cleaned_data.get('email')
+            user_checkout = UserCheckout.objects.get_or_create(email=email)
+            request.session['user_checkout_id'] = user_checkout.id
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
     # Herdado de FormMixin
-    def get_sucesse_url(self):
+    def get_success_url(self):
         return reverse('checkout')
