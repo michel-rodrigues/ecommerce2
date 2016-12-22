@@ -4,9 +4,10 @@ from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin, DetailView
+from django.views.generic.edit import FormMixin
 
 from .models import Cart, CartItem
-
+from orders.forms import GuestCheckoutForm
 
 class ItemCountView(View):
 
@@ -118,9 +119,14 @@ class CartView(SingleObjectMixin, View):
         template = self.template_name
         return render(request, template, context)
 
-class CheckoutView(DetailView):
+class CheckoutView(FormMixin, DetailView):
+
+    # https://docs.djangoproject.com/en/1.10/ref/class-based-views/mixins-editing/#formmixin
+    # https://ccbv.co.uk/projects/Django/1.10/django.views.generic.edit/FormMixin/
+
     model = Cart
     template_name = 'carts/checkout_view.html'
+    form_class = GuestCheckoutForm # herdado de FormMixin
 
     def get_object(self, *args, **kwargs):
         cart_id = self.request.session.get('cart_id')
@@ -134,9 +140,21 @@ class CheckoutView(DetailView):
         user_can_continue = False
         if not self.request.user.is_authenticated():
             context['login_form'] = AuthenticationForm()
-            # .../ref/request-response/#django.http.HttpRequest.build_absolute_uri
+            # https://docs.djangoproject.com/en/1.10/ref/request-response/#django.http.HttpRequest.build_absolute_uri
             context['next_url'] = self.request.build_absolute_uri()
         if self.request.user.is_authenticated():
             user_can_continue = True
         context['user_can_continue'] = user_can_continue
+        context['form'] = self.get_form() # Herdado de FormMixin
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    # Herdado de FormMixin
+    def get_sucesse_url(self):
+        return reverse('checkout')

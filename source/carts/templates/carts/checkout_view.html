@@ -4,10 +4,14 @@
 
 {% block content %}
 {% if not user_can_continue %}
-<div class="col-sm-6">
-  <h2>Continue como convidado</h2>
+<div class="col-sm-5">
+  <h2 style="padding-bottom: 20px;">Continue como convidado</h2>
+  <form method='POST' action="">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <input type="submit" class="btn btn-primary" value="Continue"/>
 </div>
-<div class="col-sm-6">
+<div class="col-sm-5 col-sm-offset-2">
   <h2 style="padding-bottom: 20px;">Acesse sua conta</h2>
   <form method='POST' action="{% url 'auth_login' %}">
     {% csrf_token %}
