@@ -155,7 +155,7 @@ class CheckoutView(FormMixin, DetailView):
         user_check_id = self.request.session.get('user_checkout_id')
         if not self.request.user.is_authenticated() and user_check_id is None:
             context['login_form'] = AuthenticationForm()
-            # https://docs.djangoproject.com/en/1.10/ref/request-response/#django.http.HttpRequest.build_absolute_uri
+            # .../ref/request-response/#django.http.HttpRequest.build_absolute_uri
             context['next_url'] = self.request.build_absolute_uri()
         elif self.request.user.is_authenticated() or user_check_id is not None:
             user_can_continue = True

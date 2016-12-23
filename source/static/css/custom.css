@@ -11,6 +11,10 @@
     margin-bottom: 0px;
 }
 
+.main-content {
+  margin-top: 25px;
+}
+
 .orig-price {
  color: red;
  text-decoration: line-through;
