@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from .views import about
 from carts.views import CartView, ItemCountView, CheckoutView
-from orders.views import AddressSelectFormView
+from orders.views import AddressSelectFormView, UserAddressCreateView
 
 
 urlpatterns = [
@@ -25,6 +25,10 @@ urlpatterns = [
     url(r'^checkout/address/$',
         AddressSelectFormView.as_view(),
         name='order_address'
+        ),
+    url(r'^checkout/address/add/$',
+        UserAddressCreateView.as_view(),
+        name='user_address_crate'
         ),
 ]
 
