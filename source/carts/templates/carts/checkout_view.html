@@ -23,5 +23,27 @@
   <h4>{% trans "Esqueceu sua senha?" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>.</h4>
   <h4>{% trans "Não tem uma conta?" %} <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>.</h4>
 </div>
+{% else %}
+<p class='lead'>
+  Pedido {% if order.order_id %}#{{ order.order_id }}{% endif %}</p>
+<table class='table'>
+  <tr>
+    <td>{{ order.cart.cartitem_set.count }} Produto(s):<br/>
+    {% for i in order.cart.cartitem_set.all %}
+      <b>{{ i.item.get_title }}</b><br/>
+      {% endfor %}
+    </td>
+  </tr>
+  <tr><td>Carrinho: {{ order.cart.subtotal }}</td></tr>
+  <tr><td>Impostos: {{ order.cart.tax_total }}</td></tr>
+  <tr><td>Subtotal: {{ order.cart.total }}</td></tr>
+  <tr><td>Frete: {{ order.shipping_total_price }}</td></tr>
+  <tr><td>Total: {{ order.order_total }}</td></tr>
+</table>
+</div>
+<div class='col-sm-4 col-sm-offset-4 text-center'>
+  <p><b>Endereço de cobrança</b><br/>{{ order.billing_address.get_address }}</p>
+  <p><b>Endereço de Entrega</b><br/>{{ order.shipping_address.get_address }}</p>
+</div>
 {% endif %}
 {% endblock content %}

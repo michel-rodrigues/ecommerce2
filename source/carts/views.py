@@ -169,6 +169,7 @@ class CheckoutView(FormMixin, DetailView):
             user_checkout.save()
             self.request.session['user_checkout_id'] = user_checkout.id
         context['user_can_continue'] = user_can_continue
+        context['order'] = self.get_order()
         context['form'] = self.get_form()  # Herdado de FormMixin
         return context
 
