@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import AddressForm
-from .models import UserAddress
+from .models import UserAddress, UserCheckout
 
 
 class AddressSelectFormView(FormView):
@@ -11,14 +11,18 @@ class AddressSelectFormView(FormView):
 
     def get_form(self, *args, **kwargs):
         form = super(AddressSelectFormView, self).get_form(*args, **kwargs)
-        form.fields['billing_address'].queryset = UserAddress.objects.filter(
-                user__email=self.request.user.email,
+        user_check_id = self.request.session.get('user_checkout_id')
+        user_checkout = UserCheckout.objects.get(id=user_check_id)
+        b_address = UserAddress.objects.filter(
+                user=user_checkout,
                 address_type='billing'
                 )
-        form.fields['shipping_address'].queryset = UserAddress.objects.filter(
-                user__email=self.request.user.email,
+        s_address = UserAddress.objects.filter(
+                user=user_checkout,
                 address_type='shipping'
                 )
+        form.fields['billing_address'].queryset = b_address
+        form.fields['shipping_address'].queryset = s_address
         return form
 
     def form_valid(self, form, *args, **kwargs):
