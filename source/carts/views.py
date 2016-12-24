@@ -9,7 +9,7 @@ from django.views.generic.edit import FormMixin
 from .models import Cart, CartItem
 from orders.forms import GuestCheckoutForm
 from orders.mixins import CartOrderMixin
-from orders.models import UserCheckout  # UserAddress, Order
+from orders.models import UserCheckout, Order
 from products.models import Variation
 
 
