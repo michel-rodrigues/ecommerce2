@@ -47,6 +47,8 @@
   <div class='col-sm-4 col-sm-offset-4'>
     <p><b>Endereço de cobrança</b><br/>{{ order.billing_address.get_address }}</p>
     <p><b>Endereço de Entrega</b><br/>{{ order.shipping_address.get_address }}</p>
+    <br/>
+    <p><a href="{% url 'order_address' %}">Alterar endereços</a></p>
   </div>
 </div>
 {% endif %}
