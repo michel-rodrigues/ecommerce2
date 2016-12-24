@@ -181,8 +181,8 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
                     )
             user_checkout.user = self.request.user
             self.request.session['user_checkout_id'] = user_checkout.id
-        context['user_can_continue'] = user_can_continue
         context['order'] = self.get_order()
+        context['user_can_continue'] = user_can_continue
         context['form'] = self.get_form()  # Herdado de FormMixin
         return context
 
@@ -245,7 +245,9 @@ class CheckoutFinalView(CartOrderMixin, View):
     def post(self, request, *args, **kwargs):
         if request.POST.get("payment_token") == "ABC":
             order = self.get_order()
-            print(order.cart.items.all())
+            order.mark_completed()
+            del request.session['cart_id']
+            del request.session['order_id']
         return redirect('checkout')
 
     def get(self, request, *args, **kwargs):

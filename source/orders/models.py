@@ -44,7 +44,18 @@ class UserAddress(models.Model):
                 )
 
 
+ORDER_STATUS_CHOICES = (
+        ('created', 'Criado'),
+        ('completed', 'Finalizado')
+        )
+
+
 class Order(models.Model):
+    status = models.CharField(
+            max_length=20,
+            choices=ORDER_STATUS_CHOICES,
+            default='created'
+            )
     cart = models.ForeignKey(Cart)
     user = models.ForeignKey(UserCheckout, null=True)
     shipping_address = models.ForeignKey(
@@ -66,6 +77,10 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.cart.id)
+
+    def mark_completed(self):
+        self.status = 'completed'
+        self.save()
 
 
 def order_pre_save_receiver(sender, instance, *args, **kwargs):
