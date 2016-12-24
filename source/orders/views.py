@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, FormView
 from django.views.generic.list import ListView
 
 from .forms import AddressForm, UserAddressForm
-from .mixins import CartOrderMixin
+from .mixins import CartOrderMixin, LoginRequiredMixin
 from .models import UserAddress, UserCheckout, Order
 
 
@@ -80,12 +80,19 @@ class AddressSelectFormView(CartOrderMixin, FormView):
         return '/checkout/'
 
 
-class OrderList(ListView):
+class OrderList(LoginRequiredMixin, ListView):
 
     queryset = Order.objects.all()
     template_name = 'orders/orders_list.html'
 
     def get_queryset(self):
-        user_check_id = self.request.session.get('user_checkout_id')
-        user_checkout = UserCheckout.objects.get(id=user_check_id)
-        return super(OrderList, self).get_queryset().filter(user=user_checkout)
+        queryset = super(OrderList, self).get_queryset()
+        user_check_id = self.request.user.id
+        try:
+            user_checkout = UserCheckout.objects.get(id=user_check_id)
+            print("DEU BÃO!!")
+        except UserCheckout.DoesNotExist:
+            user_checkout = None
+            print("DEU RUIM!!")
+        queryset.filter(user=user_checkout)
+        return queryset
