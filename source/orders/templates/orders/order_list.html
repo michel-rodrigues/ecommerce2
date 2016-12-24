@@ -4,7 +4,7 @@
 {% block content %}
 
 {% for object in object_list %}
-  {{ object.cart.items.all }}
+<li>{{ object.cart.items.all }}</li>
 {% endfor %}
 
 {% endblock content%}

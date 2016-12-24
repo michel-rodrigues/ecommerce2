@@ -13,12 +13,13 @@ from carts.views import (
 from orders.views import (
         AddressSelectFormView,
         UserAddressCreateView,
-        OrderList
+        OrderList,
+        OrderDetail
         )
 
 
 urlpatterns = [
-    url(r'^about', about, name='about'),
+    url(r'^about/$', about, name='about'),
     url(r'^admin/', admin.site.urls),
     # url(r'^login/', login_view, name='login'),
     url(r'^', include('newsletter.urls', namespace='newsletter')),
@@ -31,7 +32,8 @@ urlpatterns = [
     url(r'^checkout/address/$', AddressSelectFormView.as_view(), name='order_address'),
     url(r'^checkout/address/add/$', UserAddressCreateView.as_view(), name='user_address_crate'),
     url(r'^checkout/final/$', CheckoutFinalView.as_view(), name='checkout_final'),
-    url(r'^orders$', OrderList.as_view(), name='orders'),
+    url(r'^orders/$', OrderList.as_view(), name='orders'),
+    url(r'^orders/(?P<pk>\d+)$', OrderDetail.as_view(), name='order_detail'),
 ]
 
 if settings.DEBUG:

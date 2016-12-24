@@ -1,0 +1,25 @@
+<div class="row text-center">
+  <div class="col-sm-4 col-sm-offset-4">
+    <h3>Pedido {% if order.order_id %}#{{ order.order_id }}{% endif %}</h3>
+    <table class='table'>
+      <tr>
+        <td>{{ order.cart.cartitem_set.count }} Produto(s):<br/>
+        {% for i in order.cart.cartitem_set.all %}
+          <b>{{ i.item.get_title }}</b><br/>
+          {% endfor %}
+        </td>
+      </tr>
+      <tr><td>Carrinho: {{ order.cart.subtotal }}</td></tr>
+      <tr><td>Impostos: {{ order.cart.tax_total }}</td></tr>
+      <tr><td>Subtotal: {{ order.cart.total }}</td></tr>
+      <tr><td>Frete: {{ order.shipping_total_price }}</td></tr>
+      <tr><td>Total: {{ order.order_total }}</td></tr>
+    </table>
+  </div>
+  <div class='col-sm-4 col-sm-offset-4'>
+    <p><b>Endereço de cobrança</b><br/>{{ order.billing_address.get_address }}</p>
+    <p><b>Endereço de Entrega</b><br/>{{ order.shipping_address.get_address }}</p>
+    <br/>
+    <p><a href="{% url 'order_address' %}">Alterar endereços</a></p>
+  </div>
+</div>
