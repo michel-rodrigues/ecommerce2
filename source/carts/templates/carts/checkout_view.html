@@ -49,6 +49,12 @@
     <p><b>Endereço de Entrega</b><br/>{{ order.shipping_address.get_address }}</p>
     <br/>
     <p><a href="{% url 'order_address' %}">Alterar endereços</a></p>
+    <br/>
+    <form method="POST" action="{% url 'checkout_final' %}">
+      {% csrf_token %}
+      <input type="hidden" name="payment_token" value="ABC"/>
+      <button class="btn btn-success" type="submit">Finalizar Pedido</button>
+    </form>
   </div>
 </div>
 {% endif %}
