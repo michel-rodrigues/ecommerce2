@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_save
@@ -112,8 +113,14 @@ class Order(models.Model):
     order_total = models.DecimalField(decimal_places=2, max_digits=10)
     order_id = models.CharField(max_length=20, blank=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return str(self.cart.id)
+
+    def get_absolute_url(self):
+        return reverse('order_detail', kwargs={'pk': self.pk})
 
     def mark_completed(self, order_id=None):
         if order_id and not self.order_id:

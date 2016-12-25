@@ -3,15 +3,17 @@
 
 
 {% block content %}
-<div class="row" style="margin-top:40px;">
-  <p class="lead text-center">Selecione os endereços do pedido</p>
-  <div class="col-sm-4 col-sm-offset-5">
+<div class="row text-center" style="margin-top:40px;">
+  <p class="lead">Selecione os endereços do pedido</p>
+  <div class="col-sm-4 col-sm-offset-4">
     <form method="POST" action=''>
       {% csrf_token %}
       {{ form|crispy }}
       <br/>
       <input type="submit" class="btn btn-primary" value="Selecionar"/>
     </form>
+    <br/>
+    <p><a href="{% url 'user_address_create' %}">Adicionar um novo endereço</a></p>
   </div>
 </div>
 {% endblock content %}

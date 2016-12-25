@@ -40,10 +40,10 @@ class AddressSelectFormView(CartOrderMixin, FormView):
         b_address, s_address = self.get_addresses()
         if b_address.count() == 0:
             messages.success(self.request, "Adicione um endereço para cobrança")
-            return redirect('user_address_crate')
+            return redirect('user_address_create')
         elif s_address.count() == 0:
             messages.success(self.request, "Adicione um endereço para entrega")
-            return redirect('user_address_crate')
+            return redirect('user_address_create')
         else:
             return super(AddressSelectFormView, self).dispatch(*args, **kwargs)
 
@@ -84,19 +84,16 @@ class AddressSelectFormView(CartOrderMixin, FormView):
 
 class OrderList(LoginRequiredMixin, ListView):
 
-    queryset = Order.objects.all()
     template_name = 'orders/orders_list.html'
 
     def get_queryset(self):
-        queryset = super(OrderList, self).get_queryset()
-        user_check_id = self.request.user.id
+        # user_check_id = self.request.user.id
+        user_checkout_email = self.request.user.email
         try:
-            user_checkout = UserCheckout.objects.get(id=user_check_id)
-            print("DEU BÃO!!")
+            user_checkout = UserCheckout.objects.get(email=user_checkout_email)
         except UserCheckout.DoesNotExist:
             user_checkout = None
-            print("DEU RUIM!!")
-        queryset.filter(user=user_checkout)
+        queryset = Order.objects.filter(user=user_checkout.id)
         return queryset
 
 
@@ -104,13 +101,17 @@ class OrderDetail(DetailView):
     model = Order
 
     def dispatch(self, request, *args, **kwargs):
-        try:
-            user_checkout_id = self.request.session.get('user_checkout_id')
-            user_checkout = UserCheckout.objects.get(id=user_checkout_id)
-        except UserCheckout.DoesNotExist:
-            user_checkout = UserAddressForm.objects.get(user=request.user)
-        except:
-            user_checkout = None
+        if self.request.user.is_authenticated():
+            user_checkout_email = self.request.user.email
+            user_checkout = UserCheckout.objects.get(email=user_checkout_email)
+        else:
+            try:
+                user_checkout_id = self.request.session.get('user_checkout_id')
+                user_checkout = UserCheckout.objects.get(id=user_checkout_id)
+            except UserCheckout.DoesNotExist:
+                user_checkout = UserCheckout.objects.get(user=request.user)
+            except:
+                user_checkout = None
         obj = self.get_object()  # método herdado do DetailView
         if obj.user == user_checkout and user_checkout is not None:
             return super(OrderDetail, self).dispatch(request, *args, **kwargs)
