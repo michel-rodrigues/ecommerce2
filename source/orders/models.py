@@ -1,9 +1,20 @@
-from decimal import Decimal
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
+
+from decimal import Decimal
+import braintree
 
 from carts.models import Cart
+
+
+if settings.DEBUG:
+    braintree.Configuration.configure(
+                braintree.Environment.Sandbox,
+                merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                public_key=settings.BRAINTREE_PUBLIC,
+                private_key=settings.BRAINTREE_PRIVATE
+                )
 
 
 class UserCheckout(models.Model):
@@ -13,6 +24,7 @@ class UserCheckout(models.Model):
             blank=True
             )
     email = models.EmailField(unique=True)
+    braintree_id = models.CharField(max_length=120, null=True, blank=True)
 
     def __str__(self):
         return self.email
@@ -83,11 +95,23 @@ class Order(models.Model):
         self.save()
 
 
+def update_braintree_id_receiver(sender, instance, *args, **kwargs):
+    if not instance.braintree_id:
+        result = braintree.Customer.create({
+                    'email': instance.email,
+                    })
+        if result.is_success:
+            instance.braintree_id = result.customer.id
+            instance.save()
+
+
 def order_pre_save_receiver(sender, instance, *args, **kwargs):
     shipping_total_price = Decimal(instance.shipping_total_price)
     cart_total = Decimal(instance.cart.total)
     order_total = shipping_total_price + cart_total
     instance.order_total = order_total
 
+
+post_save.connect(update_braintree_id_receiver, sender=UserCheckout)
 
 pre_save.connect(order_pre_save_receiver, sender=Order)

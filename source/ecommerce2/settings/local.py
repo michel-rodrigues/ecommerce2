@@ -157,25 +157,31 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "public/media")
 
-#Crispy Form Tags SETTINGS
+# Crispy Form Tags SETTINGS
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-
-#Djando Registration Redux SETTINGS
+# Djando Registration Redux SETTINGS
 ACCOUNT_ACTIVATION_DAYS = 7
 """This is the number of days users will have to activate their accounts after registering. If a user does not activate within that period, the account will remain permanently inactive and may be deleted by maintenance scripts provided in django-registration-redux."""
 
 REGISTRATION_AUTO_LOGIN = True
 """Optional. If this is True, your users will automatically log in when they click on the activation link in their email. Defaults to False."""
 
-#REGISTRATION_DEFAULT_FROM_EMAIL
+# REGISTRATION_DEFAULT_FROM_EMAIL
 """Optional. If set, emails sent through the registration app will use this string. Falls back to using Django’s built-in DEFAULT_FROM_EMAIL setting."""
 
-#REGISTRATION_EMAIL_HTML
+# REGISTRATION_EMAIL_HTML
 """Optional. If this is False, registration emails will be send in plain text. If this is True, emails will be sent as HTML. Defaults to True."""
 
-#NÃO ENTENDI, MAS FEZ FUNCIONAR A TELA DE LOGIN 
+# An object representing the site on which the user registered
+# https://docs.djangoproject.com/en/1.10/ref/contrib/sites/
 SITE_ID = 1
 
-#Redireciona após o login
+# Redireciona após o login
 LOGIN_REDIRECT_URL = "/"
+
+# Braintree Payments Details
+BRAINTREE_PUBLIC = os.environ['BRAINTREE_PUBLIC']
+BRAINTREE_PRIVATE = os.environ['BRAINTREE_PRIVATE']
+BRAINTREE_MERCHANT_ID = os.environ['BRAINTREE_MERCHANT_ID']
+BRAINTREE_ENVIRONEMNT = os.environ['BRAINTREE_ENVIRONEMNT']
