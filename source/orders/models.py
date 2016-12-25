@@ -29,6 +29,26 @@ class UserCheckout(models.Model):
     def __str__(self):
         return self.email
 
+    @property
+    def get_braintree_id(self):
+        if not self.braintree_id:
+            result = braintree.Customer.create({
+                        'email': self.email,
+                        })
+            if result.is_success:
+                self.braintree_id = result.customer.id
+                self.save()
+        return self.braintree_id
+
+    def get_client_token(self):
+        customer_id = self.get_braintree_id
+        if customer_id:
+            client_token = braintree.ClientToken.generate({
+                    "customer_id": customer_id
+                    })
+            return client_token
+        return None
+
 
 ADDRESS_TYPE = (
         ('billing', 'Cobrança'),
@@ -97,12 +117,7 @@ class Order(models.Model):
 
 def update_braintree_id_receiver(sender, instance, *args, **kwargs):
     if not instance.braintree_id:
-        result = braintree.Customer.create({
-                    'email': instance.email,
-                    })
-        if result.is_success:
-            instance.braintree_id = result.customer.id
-            instance.save()
+        instance.get_braintree_id
 
 
 def order_pre_save_receiver(sender, instance, *args, **kwargs):

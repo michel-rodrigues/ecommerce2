@@ -172,16 +172,20 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
             context['login_form'] = AuthenticationForm()
             # .../ref/request-response/#django.http.HttpRequest.build_absolute_uri
             context['next_url'] = self.request.build_absolute_uri()
-        elif self.request.user.is_authenticated() or user_check_id is not None:
-            user_can_continue = True
-        else:
-            pass
-        if self.request.user.is_authenticated():
+        elif self.request.user.is_authenticated():
             user_checkout, _ = UserCheckout.objects.get_or_create(
                     email=self.request.user.email
                     )
             user_checkout.user = self.request.user
             self.request.session['user_checkout_id'] = user_checkout.id
+            context['client_token'] = user_checkout.get_client_token()
+            user_can_continue = True
+        elif user_check_id is not None:
+            user_checkout = UserCheckout.objects.get(id=user_check_id)
+            context['client_token'] = user_checkout.get_client_token()
+            user_can_continue = True
+        else:
+            pass
         context['order'] = self.get_order()
         context['user_can_continue'] = user_can_continue
         context['form'] = self.get_form()  # Herdado de FormMixin
