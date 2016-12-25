@@ -7,6 +7,8 @@ from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.views.generic.edit import FormMixin
 
+import braintree
+
 from .models import Cart, CartItem
 from orders.forms import GuestCheckoutForm
 from orders.mixins import CartOrderMixin
@@ -248,12 +250,35 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 class CheckoutFinalView(CartOrderMixin, View):
 
     def post(self, request, *args, **kwargs):
-        if request.POST.get("payment_token") == "ABC":
-            order = self.get_order()
-            order.mark_completed()
+        order = self.get_order()
+        order_total = order.order_total
+        nonce = request.POST.get("payment_method_nonce")
+        if nonce:
+            result = braintree.Transaction.sale({
+                "amount": order_total,
+                "payment_method_nonce": nonce,
+                "billing": {
+                    "postal_code": "{}".format(order.billing_address.zipcode),
+                    "street_address": "{}".format(order.billing_address.street),
+                    "locality": "{}".format(order.billing_address.city),
+                    "region": "{}".format(order.billing_address.state)
+                    },
+                "options": {
+                    "submit_for_settlement": True
+                    }
+                })
+        if result.is_success:
+            # print(result.transaction.id)
+            # print(result.transaction.type)
+            # print(result.transaction.status)
+            order_id = result.transaction.id
+            order.mark_completed(order_id=order_id)
             messages.success(request, 'Compra finalizada.')
             del request.session['cart_id']
             del request.session['order_id']
+        else:
+            messages.success(request, '{}'.format(result.message))
+            return redirect('checkout')
         return redirect('order_detail', pk=order.pk)
 
     def get(self, request, *args, **kwargs):

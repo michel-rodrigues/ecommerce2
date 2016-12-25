@@ -44,6 +44,9 @@ class UserCheckout(models.Model):
         customer_id = self.get_braintree_id
         if customer_id:
             client_token = braintree.ClientToken.generate({
+                    # caso exista, recupera as informações do cliente
+                    # se essa linha for retirada, a cada transação será pedido
+                    # ao cliente para inserir suas informações de cobrança
                     "customer_id": customer_id
                     })
             return client_token
@@ -78,7 +81,8 @@ class UserAddress(models.Model):
 
 ORDER_STATUS_CHOICES = (
         ('created', 'Criado'),
-        ('completed', 'Finalizado')
+        ('paid', 'Pago'),
+        ('shipped', 'Finalizado')
         )
 
 
@@ -106,12 +110,15 @@ class Order(models.Model):
             default=5.99
             )
     order_total = models.DecimalField(decimal_places=2, max_digits=10)
+    order_id = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return str(self.cart.id)
 
-    def mark_completed(self):
-        self.status = 'completed'
+    def mark_completed(self, order_id=None):
+        if order_id and not self.order_id:
+            self.order_id = order_id
+        self.status = 'paid'
         self.save()
 
 

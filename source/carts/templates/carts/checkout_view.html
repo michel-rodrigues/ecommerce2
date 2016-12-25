@@ -2,6 +2,16 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
+
+<script>
+{% block jquery %}
+  var clientToken = "{{ client_token }}";
+  braintree.setup(clientToken, "dropin", {
+      container: "payment-form"
+  });
+{% endblock jquery %}
+</script>
+
 {% block content %}
 {% if not user_can_continue %}
 <div class="row">
@@ -29,13 +39,12 @@
 {% include 'orders/order_summary_short.html' with order=order %}
 <div class="row text-center">
   <div class="col-sm-4 col-sm-offset-4">
-    <form method="POST" action="{% url 'checkout_final' %}">
+    <form id="checkout" method="POST" action="{% url 'checkout_final' %}">
       {% csrf_token %}
       <input type="hidden" name="payment_token" value="ABC"/>
+      <div id="payment-form"></div>
       <button class="btn btn-success" type="submit">Finalizar Pedido</button>
     </form>
-    <br/>
-    {{ client_token }}
   </div>
 </div>
 {% endif %}
